@@ -22,7 +22,7 @@ Centralized dashboard that allows athletes to view their readiness and sleep met
 - Shows AI-powered insights on workouts logged and the effects of those on scores
 - Makes recommendations for training and sleep based on scores, workouts logged, and barometric pressure
 - Allows user to log their workouts, including date, duration, and type of workout
-- Sliders for logging workout intensity, soreness, joint pain, and fatigue
+- Sliders for logging daily workout intensity, soreness, joint pain, fatigue, and other notes
 - Displays workout log
 
 ---

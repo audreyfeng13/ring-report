@@ -93,6 +93,9 @@
             <label for="fatigue">fatigue (1-5): <span id="fatigue-value">1</span></label>
             <input type="range" id="fatigue" min="1" max="5" value="1"
                 oninput="document.getElementById('fatigue-value').textContent=this.value">
+
+            <label for="notes">notes:</label>
+            <textarea id="notes" name="notes" placeholder="how are you feeling? anything worth noting..."></textarea>
             <button type="button" id="submit-button">submit</button>
         </form>
 
@@ -139,11 +142,7 @@
                             const div = document.createElement('div');
                             div.className = 'card';
                             div.style.marginBottom = '10px';
-                            div.innerHTML = `<strong>${log.date}</strong> — ${log.workout_type}, ${log.duration} min
-                                ${log.intensity ? ', intensity ' + log.intensity + '/10' : ''}
-                                ${log.soreness ? ', soreness ' + log.soreness + '/5' : ''}
-                                ${log.joint_pain ? ', joint pain ' + log.joint_pain + '/5' : ''}
-                                ${log.fatigue ? ', fatigue ' + log.fatigue + '/5' : ''}`;
+                            div.innerHTML = `<strong>${log.date}</strong> — ${log.workout_type}, ${log.duration} min${log.intensity ? ', intensity ' + log.intensity + '/10' : ''}${log.soreness ? ', soreness ' + log.soreness + '/5' : ''}${log.joint_pain ? ', joint pain ' + log.joint_pain + '/5' : ''}${log.fatigue ? ', fatigue ' + log.fatigue + '/5' : ''}${log.notes ? '<br>notes: ' + log.notes : ''}`;
                             container.appendChild(div);
                         });
                     });
@@ -159,10 +158,11 @@
                             date: document.getElementById('date').value,
                             duration: document.getElementById('duration').value,
                             workout_type: document.getElementById('type').value,
-                            workout_intensity: document.getElementById('intensity-value').value,
-                            soreness: document.getElementById('soreness-value').value,
-                            joint_pain: document.getElementById('joint-value').value,
-                            fatigue: document.getElementById('fatigue-value').value,
+                            intensity: document.getElementById('intensity').value,
+                            soreness: document.getElementById('soreness').value,
+                            joint_pain: document.getElementById('joint_pain').value,
+                            fatigue: document.getElementById('fatigue').value,
+                            notes: document.getElementById('notes').value
                         })
                     }).then(() => loadLogs())
                 });

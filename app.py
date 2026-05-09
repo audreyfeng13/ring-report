@@ -69,7 +69,8 @@ def generate_mock_workouts(days=7):
                 "intensity": 1,
                 "soreness": random.randint(1, 3),
                 "joint_pain": random.randint(1, 3),
-                "fatigue": random.randint(1, 3)
+                "fatigue": random.randint(1, 3),
+                "notes" : ""
             })
         else:
             intensity = random.randint(3, 10)
@@ -80,7 +81,8 @@ def generate_mock_workouts(days=7):
                 "intensity": intensity,
                 "joint_pain": random.randint(1, 5),
                 "soreness": max(1, min(5, intensity - random.randint(2, 4))),
-                "fatigue": max(1, min(5, intensity - random.randint(1, 3)))
+                "fatigue": max(1, min(5, intensity - random.randint(1, 3))),
+                "notes": ""
             })
     return logs
 
@@ -237,7 +239,8 @@ def get_logs():
         "intensity": l.intensity,
         "soreness": l.soreness,
         "joint_pain": l.joint_pain,
-        "fatigue": l.fatigue
+        "fatigue": l.fatigue,
+        "notes": l.notes
     } for l in logs])
 
 if __name__ == '__main__':
