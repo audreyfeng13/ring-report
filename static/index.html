@@ -64,8 +64,10 @@
         <form>
             <label for="date">date:</label>
             <input type="date" id="date" name="date">
+
             <label for="duration">workout duration (min):</label>
             <input type="number" id="duration" name="duration">
+
             <label for="type">workout type:</label>
             <select name="type" id="type">
                 <option value="match">match</option>
@@ -74,6 +76,22 @@
                 <option value="conditioning">conditioning</option>
                 <option value="rest">rest</option>
             </select>
+
+            <label for="intensity">intensity (1-10): <span id="intensity-value">5</span></label>
+            <input type="range" id="intensity" min="1" max="10" value="5"
+                oninput="document.getElementById('intensity-value').textContent=this.value">
+
+            <label for="soreness">soreness (1-5): <span id="soreness-value">1</span></label>
+            <input type="range" id="soreness" min="1" max="5" value="1"
+                oninput="document.getElementById('soreness-value').textContent=this.value">
+
+            <label for="joint_pain">joint pain (1-5): <span id="joint-value">1</span></label>
+            <input type="range" id="joint_pain" min="1" max="5" value="1"
+                oninput="document.getElementById('joint-value').textContent=this.value">
+
+            <label for="fatigue">fatigue (1-5): <span id="fatigue-value">1</span></label>
+            <input type="range" id="fatigue" min="1" max="5" value="1"
+                oninput="document.getElementById('fatigue-value').textContent=this.value">
             <button type="button" id="submit-button">submit</button>
 
         </form>
@@ -109,6 +127,10 @@
                             date: document.getElementById('date').value,
                             duration: document.getElementById('duration').value,
                             workout_type: document.getElementById('type').value,
+                            workout_intensity: document.getElementById('intensity-value').value,
+                            soreness: document.getElementById('soreness-value').value,
+                            joint_pain: document.getElementById('joint-value').value,
+                            fatigue: document.getElementById('fatigue-value').value,
                         })
                     })
                 });

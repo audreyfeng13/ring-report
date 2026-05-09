@@ -55,6 +55,37 @@ _mock_cache = {
     'readiness': derive_readiness(_mock_sleep)
 }
 
+def generate_mock_workouts(days=7):
+    workout_types = ['match', 'conditioning', 'lift', 'practice', 'rest']
+    logs = []
+    for i in range(days):
+        day = (datetime.today()-timedelta(days=days-i-1)).strftime('%Y-%m-%d')
+        workout_type = random.choice(workout_types)
+        if workout_type == 'rest':
+            logs.append({
+                "date": day,
+                "workout_type": "rest",
+                "duration": 0,
+                "intensity": 1,
+                "soreness": random.randint(1, 3),
+                "joint_pain": random.randint(1, 3),
+                "fatigue": random.randint(1, 3)
+            })
+        else:
+            intensity = random.randint(3, 10)
+            logs.append({
+                "date": day,
+                "workout_type": workout_type,
+                "duration": random.randint(15, 120),
+                "intensity": intensity,
+                "joint_pain": random.randint(1, 5),
+                "soreness": max(1, min(5, intensity - random.randint(2, 4))),
+                "fatigue": max(1, min(5, intensity - random.randint(1, 3)))
+            })
+    return logs
+
+_mock_workouts = generate_mock_workouts()
+
 @app.route('/')
 def index():
     return send_from_directory('static', 'index.html')
@@ -105,9 +136,17 @@ def get_insights():
             'https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=2026-04-01',
             headers=headers
         ).json()
+        
 
     recent_readiness = readiness[-7:] if isinstance(readiness, list) else readiness['data'][-7:]
     recent_sleep = sleep[-7:]  if isinstance(sleep, list) else sleep['data'][-7:]
+
+    weather = requests.get(
+        f'http://api.openweathermap.org/data/2.5/weather?lat=43.7022&lon=-72.2896&appid={OPENWEATHER_KEY}&units=imperial',
+    ).json()
+    pressure = weather['main']['pressure']
+    temp = weather['main']['temp']
+    conditions = weather['weather'][0]['description']
 
     summary = "Readiness scores (most recent last):\n"
     for r in recent_readiness:
@@ -116,19 +155,35 @@ def get_insights():
     for s in recent_sleep:
         summary += f"  {s['day']}: {s['score']}\n"
 
-    logs = DailyLog.query.order_by(DailyLog.date.desc()).limit(7).all()
-    if logs:
+    summary += f"\nCurrent weather: {temp}°F, barometric pressure: {pressure} hPa, weather conditions: {conditions}\n"
+
+    if not OURA_TOKEN:
+        workout_logs = _mock_workouts
+    else:
+        workout_logs = []
+        for workout in DailyLog.query.order_by(DailyLog.date.desc()).limit(7).all():
+            workout_logs.append({
+                "date": workout.date,
+                "workout_type": workout.workout_type,
+                "duration": workout.duration,
+                "intensity": workout.intensity,
+                "soreness": workout.soreness,
+                "joint_pain": workout.joint_pain,
+                "fatigue": workout.fatigue
+            })
+        
+    if workout_logs:
         summary += "\nRecent Workouts:\n"
-        for log in logs:
-            summary += f"  {log.date}: {log.workout_type or 'unknown'}, {log.duration or 0} min"
-            if log.intensity:
-                summary += f", intensity {log.intensity}/10"
-            if log.soreness:
-                summary += f", soreness {log.soreness}/10"
-            if log.joint_pain:
-                summary += f", joint pain {log.joint_pain}/10"
-            if log.fatigue:
-                summary += f", fatigue {log.fatigue}/10"
+        for log in workout_logs:
+            summary += f"  {log['date']}: {log['workout_type'] or 'unknown'}, {log['duration'] or 0} min"
+            if log['intensity']:
+                summary += f", intensity {log['intensity']}/10"
+            if log['soreness']:
+                summary += f", soreness {log['soreness']}/5"
+            if log['joint_pain']:
+                summary += f", joint pain {log['joint_pain']}/5"
+            if log['fatigue']:
+                summary += f", fatigue {log['fatigue']}/5"
             summary += "\n"
 
     client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_KEY'))
@@ -143,8 +198,8 @@ def get_insights():
             {summary}
 
             Look for patterns between workout type, intensity, and duration and next day readiness drops, soreness or joint
-            pain across days, weather pressure and joint pain or fatigue, correlation between high intensity workouts and sleep
-            scores, soreness or joint pain patterns across days, and any overtraining signals.
+            pain across days, weather pressure/temperature/conditions and joint pain or fatigue, correlation between high 
+            intensity workouts and sleep scores, soreness or joint pain patterns across days, and any overtraining signals.
             In 3-4 sentences all lowercase, tell her what patterns you notice and what she should pay attention to today.
             Be specific to the numbers. Be direct, not generic."""
         }]
