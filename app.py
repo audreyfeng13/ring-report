@@ -35,8 +35,23 @@ def generate_mock_data(base_score, days = 7):
     for i in range(days):
         day = (datetime.today()-timedelta(days=days-i-1)).strftime('%Y-%m-%d')
         score = max(50, min(99, score + random.randint(-8,8)))
-        data.append({"day": day, "score":score})
-        return {"data": data}
+        data.append({"day": day, "score": score})
+    return {"data": data}
+
+_mock_sleep = generate_mock_data(72)
+
+def derive_readiness(sleep_data):
+    data = []
+    for s in sleep_data['data']:
+        readiness_score = max(50, min(99, s['score'] + random.randint(-8,8)))
+        data.append({"day": s['day'], "score": readiness_score})
+    return {"data": data}
+
+_mock_cache = {
+    'sleep': _mock_sleep,
+    'readiness': derive_readiness(_mock_sleep)
+}
+   
 
 
 @app.route('/')
