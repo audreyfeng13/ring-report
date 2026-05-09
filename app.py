@@ -113,6 +113,19 @@ def get_insights():
     for s in recent_sleep:
         summary += f"  {s['day']}: {s['score']}\n"
 
+    logs = DailyLog.query.order_by(DailyLog.date.desc()).limit(7).all()
+    if logs:
+        summary += "\nRecent Workouts:\n"
+        for log in logs:
+            if log.intensity:
+                summary += f", intensity {log.intensity}/10"
+            if log.soreness:
+                summary += f", soreness {log.soreness}/10"
+            if log.joint_pain:
+                summary += f", joint pain {log.joint_pain}/10"
+            if log.fatigue:
+                summary += f", fatigue {log.fatigue}/10"
+            summary += "\n"
     client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_KEY'))
     message = client.messages.create(
         model="claude-sonnet-4-5",
@@ -124,7 +137,10 @@ def get_insights():
             Here is her last 7 days of data:
             {summary}
 
-            In 2-3 sentences all lowercase, tell her what patterns you notice and what she should pay attention to today.
+            Look for patterns between workout type, intensity, and duration and next day readiness drops, soreness or joint
+            pain across days, weather pressure and joint pain or fatigue, correlation between high intensity workouts and sleep
+            scores, soreness or joint pain patterns across days, and any overtraining signals.
+            In 3-4 sentences all lowercase, tell her what patterns you notice and what she should pay attention to today.
             Be specific to the numbers. Be direct, not generic."""
         }]
     )
