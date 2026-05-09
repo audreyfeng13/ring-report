@@ -2,9 +2,9 @@
 
 Personalized recovery dashboard for athletes using Oura ring biometric data to find patterns with weather and training logs to make AI-powered recommendations about future training and recovery. Specifically considers if the athlete has an underlying autoimmune condition, taking into account how potential flares could be affecting fatigue or readiness. 
 
-Live link: https://ring-report.onrender.com
-Website screenshot: ![Dashboard](web_screenshot_1.png) ![Workout Log](web_screenshot_2.png)
-Live demo with real data and workout logs: ![Demo](live_demo.mov)
+Live link: https://ring-report.onrender.com \
+Website screenshot: ![Dashboard](web_screenshot_1.png) ![Workout Log](web_screenshot_2.png) \
+Live demo with real data and workout logs: https://youtu.be/CI_bdAP-hss
 
 ---
 
