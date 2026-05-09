@@ -20,7 +20,7 @@
             }
             .grid {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: 1fr 1fr 1fr;
                 gap: 20px;
                 margin-top: 30px;
             }
@@ -30,19 +30,15 @@
         <h1>ring report</h1>
         <p>athlete dashboard</p>
         <div class="grid">
-            <div>
             <div class="card">
                 <p>readiness score</p>
                 <h2 id="readiness-score">--</h2>
             </div>
-            </div>
             <div class="card">
-                <div>
-                    <p>sleep score</p>
-                    <h2 id="sleep-score">--</h2>
-                </div>
+                <p>sleep score</p>
+                <h2 id="sleep-score">--</h2>
             </div>
-            <div class="card">
+            <div class="card" style="padding-top: 14px; padding-bottom: 14px">
                 <div>
                     <p>weather</p>
                     <h2 id="weather-temp">--</h2>
