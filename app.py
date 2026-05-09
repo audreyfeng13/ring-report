@@ -225,6 +225,19 @@ def save_log():
     db.session.commit()
     return jsonify({"status": "saved"})
 
+@app.route('/api/logs')
+def get_logs():
+    logs = DailyLog.query.order_by(DailyLog.date.desc()).limit(7).all()
+    return jsonify([{
+        "date": l.date,
+        "workout_type": l.workout_type,
+        "duration": l.duration,
+        "intensity": l.intensity,
+        "soreness": l.soreness,
+        "joint_pain": l.joint_pain,
+        "fatigue": l.fatigue
+    } for l in logs])
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

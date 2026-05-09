@@ -61,6 +61,7 @@
             <h2>workout log</h2>
             <p id="workout-logs"></p>
         </div>
+
         <form>
             <label for="date">date:</label>
             <input type="date" id="date" name="date">
@@ -93,8 +94,13 @@
             <input type="range" id="fatigue" min="1" max="5" value="1"
                 oninput="document.getElementById('fatigue-value').textContent=this.value">
             <button type="button" id="submit-button">submit</button>
-
         </form>
+
+        <div id="logs-section">
+            <h2>workout log history</h2>
+            <div id="logs-container"></div>
+        </div>
+
         <script>
             Promise.all([
                 fetch('/api/readiness').then(response => response.json()),
@@ -119,6 +125,32 @@
                     document.getElementById('insights-text').textContent = data.insight;
                 });
 
+                function loadLogs() {
+                    fetch('/api/logs')
+                    .then(r => r.json())
+                    .then(logs => {
+                        const container = document.getElementById('logs-container');
+                        container.innerHTML = '';
+                        if (logs.length === 0) {
+                            container.innerHTML = '<p>no logs yet</p>';
+                            return;
+                        }
+                        logs.forEach(log => {
+                            const div = document.createElement('div');
+                            div.className = 'card';
+                            div.style.marginBottom = '10px';
+                            div.innerHTML = `<strong>${log.date}</strong> — ${log.workout_type}, ${log.duration} min
+                                ${log.intensity ? ', intensity ' + log.intensity + '/10' : ''}
+                                ${log.soreness ? ', soreness ' + log.soreness + '/5' : ''}
+                                ${log.joint_pain ? ', joint pain ' + log.joint_pain + '/5' : ''}
+                                ${log.fatigue ? ', fatigue ' + log.fatigue + '/5' : ''}`;
+                            container.appendChild(div);
+                        });
+                    });
+                }
+
+                loadLogs();
+
                 document.getElementById('submit-button').addEventListener('click', function() {
                     fetch('/api/log', {
                         method: 'POST',
@@ -132,7 +164,7 @@
                             joint_pain: document.getElementById('joint-value').value,
                             fatigue: document.getElementById('fatigue-value').value,
                         })
-                    })
+                    }).then(() => loadLogs())
                 });
         </script>
     </body>
