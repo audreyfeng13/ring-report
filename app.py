@@ -24,7 +24,7 @@ class DailyLog(db.Model):
     soreness = db.Column(db.Integer)
     joint_pain = db.Column(db.Integer)
     pain_location = db.Column(db.String(100))
-    lupus_symptoms = db.Column(db.Integer)
+    fatigue = db.Column(db.Integer)
     notes = db.Column(db.Text)
 
 OURA_TOKEN = os.getenv('OURA_TOKEN')
@@ -83,7 +83,7 @@ def get_sleep():
 @app.route('/api/weather')
 def get_weather():
     response = requests.get(
-        f'http://api.openweathermap.org/data/2.5/weather?q=Hanover,US&appid={OPENWEATHER_KEY}&units=imperial'
+        f'http://api.openweathermap.org/data/2.5/weather?lat=43.7022&lon=-72.2896&appid={OPENWEATHER_KEY}&units=imperial'
     )
     return jsonify(response.json())
 
@@ -117,6 +117,7 @@ def get_insights():
     if logs:
         summary += "\nRecent Workouts:\n"
         for log in logs:
+            summary += f"  {log.date}: {log.workout_type or 'unknown'}, {log.duration or 0} min"
             if log.intensity:
                 summary += f", intensity {log.intensity}/10"
             if log.soreness:
@@ -126,6 +127,7 @@ def get_insights():
             if log.fatigue:
                 summary += f", fatigue {log.fatigue}/10"
             summary += "\n"
+
     client = anthropic.Anthropic(api_key=os.getenv('ANTHROPIC_KEY'))
     message = client.messages.create(
         model="claude-sonnet-4-5",
@@ -158,7 +160,7 @@ def save_log():
         soreness=data.get('soreness'),
         joint_pain=data.get('joint_pain'),
         pain_location=data.get('pain_location'),
-        lupus_symptoms=data.get('lupus_symptoms'),
+        fatigue=data.get('fatigue'),
         notes=data.get('notes')
     )
     db.session.add(entry)
