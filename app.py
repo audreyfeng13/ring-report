@@ -59,7 +59,7 @@ def index():
 @app.route('/api/readiness')
 def get_readiness():
     if not OURA_TOKEN:
-        return jsonify(_mock_cache['readiness']['data'])
+        return jsonify(_mock_cache['readiness'])
     else: 
         headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
         response = requests.get(
@@ -71,7 +71,7 @@ def get_readiness():
 @app.route('/api/sleep')
 def get_sleep():
     if not OURA_TOKEN:
-       return jsonify(_mock_cache['sleep']['data'])
+       return jsonify(_mock_cache['sleep'])
     else:
         headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
         response = requests.get(
