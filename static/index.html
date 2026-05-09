@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ring Report</title>
+        <style>
+            h1 {
+                color: whitesmoke
+            }
+            body {
+                background-color: #1D2545;
+                color: white;
+                font-family: 'Montserrat', sans-serif;
+                padding: 40px;
+            }
+            .card {
+                background-color: #414375;
+                border-radius: 12px;
+                padding: 28px;
+                margin: 10px;
+            }
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>ring report</h1>
+        <p>athlete dashboard</p>
+        <div class="grid">
+            <div>
+            <div class="card">
+                <p>readiness score</p>
+                <h2 id="readiness-score">--</h2>
+            </div>
+            </div>
+            <div class="card">
+                <div>
+                    <p>sleep score</p>
+                    <h2 id="sleep-score">--</h2>
+                </div>
+            </div>
+            <div class="card">
+                <div>
+                    <p>weather</p>
+                    <h2 id="weather-temp">--</h2>
+                    <h2 id="weather-temp-low">--</h2>
+                    <h2 id="weather-temp-high">--</h2>
+                    <h2 id="weather-temp-feels-like">--</h2>
+                    <h2 id="weather-temp-desc">--</h2>
+                </div>
+            </div>
+        </div>
+        <div id="flags">
+            <h2>flags & recommendations</h2>
+            <div id="flags-container"></div>
+        </div>
+        <div id="insights">
+            <h2>ai insights</h2>
+            <p id="insights-text">loading...</p>
+        </div>
+        <div id="log">
+            <h2>workout log</h2>
+            <p id="workout-logs"></p>
+        </div>
+        <form>
+            <label for="date">date:</label>
+            <input type="date" id="date" name="date">
+            <label for="duration">workout duration (min):</label>
+            <input type="number" id="duration" name="duration">
+            <label for="type">workout type:</label>
+            <select name="type" id="type">
+                <option value="match">match</option>
+                <option value="practice">practice</option>
+                <option value="lift">lift</option>
+                <option value="conditioning">conditioning</option>
+                <option value="rest">rest</option>
+            </select>
+            <button type="button" id="submit-button">submit</button>
+
+        </form>
+        <script>
+            Promise.all([
+                fetch('/api/readiness').then(response => response.json()),
+                fetch('/api/sleep').then(response => response.json()),
+                fetch('/api/weather').then(response => response.json()),
+                ]).then(([readinessData, sleepData, weatherData]) => {
+                    const readiness = readinessData.data[readinessData.data.length - 1];
+                    const sleep = sleepData.data[sleepData.data.length - 1];
+
+                    document.getElementById('readiness-score').textContent = readiness.score;
+                    document.getElementById('sleep-score').textContent = sleep.score;
+                    document.getElementById('weather-temp').textContent = 'temp: ' + weatherData.main.temp + 'ºF';
+                    document.getElementById('weather-temp-low').textContent = 'low: ' + weatherData.main.temp_min + 'ºF';
+                    document.getElementById('weather-temp-high').textContent = 'high: ' + weatherData.main.temp_max + 'ºF';
+                    document.getElementById('weather-temp-feels-like').textContent = 'feels like: ' + weatherData.main.feels_like + 'ºF';
+                    document.getElementById('weather-temp-desc').textContent = weatherData.weather[0].description;
+                });
+
+                fetch('/api/insights')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('insights-text').textContent = data.insight;
+                });
+
+                document.getElementById('submit-button').addEventListener('click', function() {
+                    fetch('/api/log', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date: document.getElementById('date').value,
+                            duration: document.getElementById('duration').value,
+                            workout_type: document.getElementById('type').value,
+                        })
+                    })
+                });
+        </script>
+    </body>
+</html>
