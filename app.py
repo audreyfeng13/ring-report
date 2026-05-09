@@ -227,6 +227,8 @@ def save_log():
 
 @app.route('/api/logs')
 def get_logs():
+    if not OURA_TOKEN:
+        return jsonify(_mock_workouts)
     logs = DailyLog.query.order_by(DailyLog.date.desc()).limit(7).all()
     return jsonify([{
         "date": l.date,
