@@ -3,7 +3,7 @@
 Personalized recovery dashboard for athletes using Oura ring biometric data to find patterns with weather and training logs to make AI-powered recommendations about future training and recovery. Specifically considers if the athlete has an underlying autoimmune condition, taking into account how potential flares could be affecting fatigue or readiness. 
 
 Live link: https://ring-report.onrender.com
-Website screenshot: ![Dashboard](web_screenshot.png)
+Website screenshot: ![Dashboard](web_screenshot_1.png) ![Workout Log](web_screenshot_2.png)
 Live demo with real data and workout logs: ![Demo](live_demo.mov)
 
 ---
@@ -20,8 +20,10 @@ Centralized dashboard that allows athletes to view their readiness and sleep met
 - Provides local weather conditions, including current temperature, the low and high for the day, what it feels like, and weather description
 - Flags anything concerning, such as dips in readiness and sleep scores or potentially problematic weather conditions
 - Shows AI-powered insights on workouts logged and the effects of those on scores
-- Makes recommendations for training and sleep based on scores and workouts logged
+- Makes recommendations for training and sleep based on scores, workouts logged, and barometric pressure
 - Allows user to log their workouts, including date, duration, and type of workout
+- Sliders for logging workout intensity, soreness, joint pain, and fatigue
+- Displays workout log
 
 ---
 
@@ -68,7 +70,7 @@ As an athlete who was recently diagnosed with an autoimmune condition, I've had 
 
 This app should reduce the decision fatigue and daily analysis required by athletes, particularly student-athletes, who have already a lot on their minds. Using the power of AI to find patterns within the data collected by a wearable and logged by the user allows the user to find out new correlations between workouts and recovery that they could have missed on their own with little effort on their part. Flagging and making direct recommendations also makes for easier communication with coaches about training, and gives the opportunity for the athlete to be proactive with their training and recovery, rather than waiting to see what potential consequences will happen. By integrating weather conditions, all the data, logs, and recommendations are located in one place, making app use for the user extremely easy. 
 
-During this project, I learned how to write HTMl, CSS, and use Flask, all of which I had no experience with previously. I had never developed a web service before, having only done projects in class locally or using Streamlit. I chose these because they are fundamental skills for web development, and what I've learned will open up many more opportunities for future projects. All three APIs I used were also new to me, as I have previously only worked with the Reddit API.
+During this project, I learned how to write HTMl, CSS, and some Javascript for the frontend, and use Flask for the backend, all of which I had no experience with previously. I had never developed a web service before, having only done projects in class locally or using Streamlit. I chose these because they are fundamental skills for web development, and what I've learned will open up many more opportunities for future projects. All three APIs I used were also new to me, as I have previously only worked with the Reddit API.
 
 ---
 
