@@ -4,7 +4,8 @@ Personalized recovery dashboard for athletes using Oura ring biometric data to f
 
 Live link: https://ring-report.onrender.com \
 Website screenshot: ![Dashboard](web_screenshot_1.png) ![Workout Log](web_screenshot_2.png) \
-Live demo with real data and workout logs: https://youtu.be/CI_bdAP-hss
+Live demo with real data and workout logs: 
+https://github.com/user-attachments/assets/19e48a92-b6fb-40e8-ad24-300667c08153
 
 ---
 
