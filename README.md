@@ -88,11 +88,11 @@ I also had issues with the incompatibility of pydantic AI used by Anthropic with
 
 ## AI Usage
 
-I used Claude as a coding assistant throughout this project, as given my limited experience and the timeframe, it would have been very difficult to learn all the syntax for HTML, CSS, Javascript, etc. I used it more heavily at the beginning of the project, when I was learning the basics, though I ensured I understood all the code that it gave me. After the initial stages, I wrote the majority of code on my own when I had a grasp of the fundamentals. I used it to debug when there were technical errors having to do with language or running the application that I didn't understand. I also used it as an assistant for me to clarify and bounce my ideas off of. 
+I used Claude throughot the project as a coding assistant and debugger, in addition to explaining technical concepts. Given that I didn't have any HTML, CSS, or Javascript experience prior to this project and the limited timeframe, much of the syntax was written with Claude. However, I ensured I understood all the code that it gave me. After the initial stages, I wrote more of the code on my own when I had a grasp of the fundamentals. I used it to debug when there were technical errors having to do with language or running the application that I didn't understand. I also used it as an assistant for me to clarify and bounce my ideas off of. 
 
-Although I used AI to help with the technical part, all the ideas, such as what to include in the displays, what to take into account for flags and recommendations, what to include in the workout logs, and using the data simulator and the fixes for the errors those causes among others, all came from me. 
+Although I used AI to help with the technical part, all the ideas, such as what to include in the displays, what to take into account for flags and recommendations, what to include in the workout logs, and using the data simulator and the fixes for the errors those causes among others, all came from me. The architecture and product decisions were my own ideas, and I used Claude to help implement them.  
 
-One specific of a prompt I used was that I wanted to learn how to us AI to flag any concerning signs, rather than hardcoding specific rules. This lead to the integration of the Claude API, which Claude helped me navigate technically. Another example was when I first tried including mock data, and Claude gave me this output: 
+One specific of a prompt I used was that I wanted to learn how to use AI to flag any concerning signs, rather than hardcoding specific rules. This lead to the integration of the Claude API, which Claude helped me navigate technically. Another example was when I first tried including mock data, and Claude gave me this output: 
     ```python
     _mock_cache = {
         'readiness': generate_mock_data(75),
@@ -126,4 +126,3 @@ I adapted this to derive readiness based on sleep, ending up with this code:
 - Ability to edit and delete old workout log entries in Render, rather than only locally
 - Full exporting ability for data and recommendations for sharing
 - Historical weather correlation through storing past week's weather and seeing correlation with scores and symptom logs, rather than just weather analysis based on the current day's weather
-
