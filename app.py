@@ -51,8 +51,6 @@ _mock_cache = {
     'sleep': _mock_sleep,
     'readiness': derive_readiness(_mock_sleep)
 }
-   
-
 
 @app.route('/')
 def index():
@@ -60,24 +58,26 @@ def index():
 
 @app.route('/api/readiness')
 def get_readiness():
-    headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
     if not OURA_TOKEN:
-        return jsonify(generate_mock_data(75))
-    response = requests.get(
-        'https://api.ouraring.com/v2/usercollection/daily_readiness?start_date=2026-04-01',
-        headers=headers
-    )
+        return jsonify(_mock_cache['readiness']['data'])
+    else: 
+        headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
+        response = requests.get(
+            'https://api.ouraring.com/v2/usercollection/daily_readiness?start_date=2026-04-01',
+            headers=headers
+        )
     return jsonify(response.json())
 
 @app.route('/api/sleep')
 def get_sleep():
-    headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
     if not OURA_TOKEN:
-        return jsonify(generate_mock_data(75))
-    response = requests.get(
-        'https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=2026-04-01',
-        headers=headers
-    )
+       return jsonify(_mock_cache['sleep']['data'])
+    else:
+        headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
+        response = requests.get(
+            'https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=2026-04-01',
+            headers=headers
+        )
     return jsonify(response.json())
 
 @app.route('/api/weather')
@@ -89,18 +89,22 @@ def get_weather():
 
 @app.route('/api/insights')
 def get_insights():
-    headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
-    readiness = requests.get(
-        'https://api.ouraring.com/v2/usercollection/daily_readiness?start_date=2026-04-01',
-        headers=headers
-    ).json()
-    sleep = requests.get(
-        'https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=2026-04-01',
-        headers=headers
-    ).json()
+    if not OURA_TOKEN:
+        readiness = _mock_cache['readiness']['data']
+        sleep = _mock_cache['sleep']['data']
+    else:
+        headers = {'Authorization': f'Bearer {OURA_TOKEN}'}
+        readiness = requests.get(
+            'https://api.ouraring.com/v2/usercollection/daily_readiness?start_date=2026-04-01',
+            headers=headers
+        ).json()
+        sleep = requests.get(
+            'https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=2026-04-01',
+            headers=headers
+        ).json()
 
-    recent_readiness = readiness['data'][-7:]
-    recent_sleep = sleep['data'][-7:]
+    recent_readiness = readiness[-7:] if isinstance(readiness, list) else readiness['data'][-7:]
+    recent_sleep = sleep[-7:]  if isinstance(sleep, list) else sleep['data'][-7:]
 
     summary = "Readiness scores (most recent last):\n"
     for r in recent_readiness:
