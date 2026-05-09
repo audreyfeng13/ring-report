@@ -14,6 +14,8 @@ app = Flask(__name__, static_folder='static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ring_report.db'
 db = SQLAlchemy(app)
 CORS(app)
+with app.app_context():
+    db.create_all()
 
 class DailyLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
